@@ -1,5 +1,5 @@
 import { createBucketClient } from '@cosmicjs/sdk'
-import { Post, Author, Category, CosmicResponse, hasStatus } from '@/types'
+import { Post, Author, Category, Page, CosmicResponse, hasStatus } from '@/types'
 
 export const cosmic = createBucketClient({
   bucketSlug: process.env.COSMIC_BUCKET_SLUG as string,
@@ -189,5 +189,24 @@ export async function getFeaturedPosts(): Promise<Post[]> {
       return []
     }
     throw new Error('Failed to fetch featured posts')
+  }
+}
+
+// Fetch single page by slug
+export async function getPageBySlug(slug: string): Promise<Page | null> {
+  try {
+    const response = await cosmic.objects
+      .findOne({
+        type: 'pages',
+        slug
+      })
+      .depth(1)
+    
+    return response.object as Page
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return null
+    }
+    throw new Error('Failed to fetch page')
   }
 }

@@ -60,6 +60,20 @@ export interface Post extends CosmicObject {
   };
 }
 
+// Page interface
+export interface Page extends CosmicObject {
+  type: 'pages';
+  metadata: {
+    page_title?: string;
+    hero_image?: {
+      url: string;
+      imgix_url: string;
+    };
+    content?: string;
+    meta_description?: string;
+  };
+}
+
 // API response types
 export interface CosmicResponse<T> {
   objects: T[];
@@ -128,6 +142,10 @@ export function isAuthor(obj: CosmicObject): obj is Author {
 
 export function isCategory(obj: CosmicObject): obj is Category {
   return obj.type === 'categories';
+}
+
+export function isPage(obj: CosmicObject): obj is Page {
+  return obj.type === 'pages';
 }
 
 export function hasStatus(error: unknown): error is { status: number } {
